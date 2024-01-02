@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model BackTalk {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  content   String
+  talkId    String
+  ownerId   String
+  tags      String
+  isNSFW    Boolean
+  is18Plus  Boolean
+
+  @@index([ownerId])
+  @@index([talkId])
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String @unique
+}
+
+model Dislike {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  ownerId   String
+  talkId    String
+
+  @@index([ownerId])
+  @@index([talkId])
+}
+
+model Like {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  ownerId   String
+  talkId    String
+
+  @@index([ownerId])
+  @@index([talkId])
+}
+
+model Retalks {
+  id     String @id @default(cuid())
+  talkId String
+  userId String
+
+  @@unique([talkId, userId])
+  @@index([userId])
+}
+
+model Talk {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  text      String?
+  image     String?
+  video     String?
+  ownerId   String
+  tags      String?
+  isNSFW    Boolean   @default(false)
+  is18Plus  Boolean   @default(false)
+
+  @@index([ownerId])
+}
+
+model TalksToCategories {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_TalksToCategories_AB_unique")
+  @@index([B], map: "_TalksToCategories_B_index")
+  @@map("_TalksToCategories")
+}
+
+model UserFollowers {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_UserFollowers_AB_unique")
+  @@index([B], map: "_UserFollowers_B_index")
+  @@map("_UserFollowers")
+}
+
+model UserFriends {
+  A Int
+  B Int
+
+  @@unique([A, B], map: "_UserFriends_AB_unique")
+  @@index([B], map: "_UserFriends_B_index")
+  @@map("_UserFriends")
+}
+
+model accounts {
+  id                  String  @id @default(cuid())
+  user_id             String
+  type                String
+  provider            String
+  provider_account_id String
+  refresh_token       String? @db.Text
+  access_token        String? @db.Text
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String? @db.Text
+  session_state       String?
+
+  @@unique([provider, provider_account_id])
+  @@index([user_id])
+}
+
+model sessions {
+  id            String   @id @default(cuid())
+  session_token String   @unique
+  user_id       String
+  expires       DateTime
+
+  @@index([user_id])
+}
+
+model users {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime?
+  email         String    @unique
+  hPassword     String?
+  name          String
+  profilePic    String?
+  emailVerified Boolean?  @default(false)
+  role          String
+  username      String    @unique
+  status        String    @default("active")
+  location      String?
+  description   String?
+  url           String?
+  lang          String    @default("en")
+  theme         String?   @default("system")
+}
