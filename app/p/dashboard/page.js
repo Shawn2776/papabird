@@ -1,71 +1,50 @@
-"use client";
-
+import UserCard from "@/app/components/ui/UserCard";
+import prisma from "@/lib/prisma";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
-const DashboardPage = () => {
-  const usersQuery = useQuery({
-    queryKey: "users",
-    queryFn: async () => {
-      const response = await fetch("/api/users");
-      const data = await response.json();
-      return data;
+async function getUsers() {
+  const response = await prisma.users.findMany({
+    select: {
+      id: true,
+      name: true,
+      username: true,
+      email: true,
+      status: true,
+      role: true,
+      profilePic: true,
+    },
+    orderBy: {
+      name: "asc",
     },
   });
-  const { status } = useSession();
 
-  if (status === "unauthenticated") {
-    redirect("/");
-  }
+  return response;
+}
 
-  if (usersQuery.isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (usersQuery.isError) {
-    return <div>{usersQuery.error.message}</div>;
-  }
-
-  if (usersQuery.isSuccess) {
-    return (
-      <div className="min-h-screen px-2 py-2 rounded-md bg-neutral-900">
-        {usersQuery.data.map((user) => (
-          <div
-            key={user.id}
-            className="flex items-center justify-between px-4 py-2 mb-2 rounded-md bg-neutral-800"
-          >
-            <div className="text-sm font-medium text-neutral-100">
-              {user.profilePic ? (
-                <Image
-                  src={user.profilePic}
-                  alt="Profile picture"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
-              ) : (
-                <></>
-              )}
-            </div>
-            <div className="flex items-start justify-start text-sm font-medium text-left text-neutral-100">
-              {user.name}
-            </div>
-            <div className="flex items-start justify-start text-sm font-medium text-left text-neutral-100">
-              {user.email}
-            </div>
-            <div className="flex items-start justify-start text-sm font-medium text-left text-neutral-100">
-              {user.status}
-            </div>
-            <div className="flex items-start justify-start text-sm font-medium text-left text-neutral-100">
-              {user.role}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-};
-
-export default DashboardPage;
+export default async function DashboardPage() {
+  const users = await getUsers();
+  return (
+    <div className="overflow-x-auto">
+      <table className="table">
+        {/* head */}
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <UserCard key={user.id} user={user} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
