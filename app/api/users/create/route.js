@@ -5,8 +5,6 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
-    console.log("body", body);
-
     const user = await prisma.users.create({
       data: {
         email: body.email,
@@ -25,11 +23,8 @@ export async function POST(request) {
       },
     });
 
-    console.log("user", user);
-
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.log("error", error);
     return NextResponse.json(
       { message: "Could not create user." },
       { status: 500 }

@@ -10,7 +10,15 @@ const UserForm = ({
   isEditing,
   initialValue,
 }) => {
-  const { register, handleSubmit } = useForm({ defaultValues: initialValue });
+  const {
+    register,
+    setError,
+    formState: { errors },
+    handleSubmit,
+    watch,
+  } = useForm({
+    defaultValues: initialValue,
+  });
 
   // fetch roles
   const { data: dataRoles, isLoading: isLoadingRoles } = useQuery({
@@ -47,6 +55,37 @@ const UserForm = ({
         placeholder="Email"
         className="w-full max-w-lg input input-bordered"
       />
+
+      {
+        // if editing, don't show password fields
+        !isEditing && (
+          <>
+            <input
+              type="password"
+              {...register("password", { required: true })}
+              placeholder="Password"
+              className="w-full max-w-lg input input-bordered"
+            />
+            <input
+              {...register("confirm_password", {
+                required: true,
+                validate: (val) => {
+                  if (watch("password") != val) {
+                    return "Your passwords do no match";
+                  }
+                },
+              })}
+              type="password"
+              placeholder="Password"
+              className="w-full max-w-lg input input-bordered"
+            />
+            {errors.confirm_password && (
+              <p>{errors.confirm_password.message}</p>
+            )}
+          </>
+        )
+      }
+
       <input
         type="text"
         {...register("username", { required: true })}
@@ -89,6 +128,7 @@ const UserForm = ({
           ))}
         </select>
       )}
+
       <button
         type="submit"
         className="w-full max-w-lg text-xl border shadow-md btn shadow-black"
