@@ -10,6 +10,7 @@ export async function POST(request) {
         email: body.email,
         name: body.name,
         username: body.username,
+        hPassword: body.hPassword,
         role: {
           connect: {
             id: body.roleId,

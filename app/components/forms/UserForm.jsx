@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
+import bcrypt from "bcryptjs";
 
 const UserForm = ({
   submit,
@@ -12,13 +13,21 @@ const UserForm = ({
 }) => {
   const {
     register,
-    setError,
     formState: { errors },
     handleSubmit,
     watch,
   } = useForm({
     defaultValues: initialValue,
   });
+
+  const onSubmit = async (data) => {
+    // Only hash the password if it's a part of the form data
+    if (data.password) {
+      const hPassword = await bcrypt.hash(data.password, 10); // 10 is the salt rounds
+      data.hPassword = hPassword;
+    }
+    submit(data);
+  };
 
   // fetch roles
   const { data: dataRoles, isLoading: isLoadingRoles } = useQuery({
@@ -40,7 +49,7 @@ const UserForm = ({
 
   return (
     <form
-      onSubmit={handleSubmit(submit)}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col items-center justify-center gap-5 mt-10"
     >
       <input
