@@ -27,7 +27,7 @@ async function getUsers() {
 export default async function DashboardPage() {
   const users = await getUsers();
   return (
-    <div className="overflow-x-auto">
+    <div className="min-h-screen">
       <table className="table">
         {/* head */}
         <thead>

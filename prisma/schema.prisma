@@ -3,12 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model BackTalk {
-  id        String    @id @default(cuid())
+  id        String    @unique @id @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime?
   content   String
@@ -28,7 +29,7 @@ model Category {
 }
 
 model Dislike {
-  id        String    @id @default(cuid())
+  id        String    @unique @id @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime?
   ownerId   String
@@ -39,7 +40,7 @@ model Dislike {
 }
 
 model Like {
-  id        String    @id @default(cuid())
+  id        String    @unique @id @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime?
   ownerId   String
@@ -50,7 +51,7 @@ model Like {
 }
 
 model Retalks {
-  id     String @id @default(cuid())
+  id     String @unique @id @default(cuid())
   talkId String
   userId String
 
@@ -59,7 +60,7 @@ model Retalks {
 }
 
 model Talk {
-  id        String    @id @default(cuid())
+  id        String    @unique @id @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime?
   text      String?
@@ -101,7 +102,7 @@ model UserFriends {
 }
 
 model accounts {
-  id                  String  @id @default(cuid())
+  id                  String  @unique @id @default(cuid())
   user_id             String
   type                String
   provider            String
@@ -119,7 +120,7 @@ model accounts {
 }
 
 model sessions {
-  id            String   @id @default(cuid())
+  id            String   @unique @id @default(cuid())
   session_token String   @unique
   user_id       String
   expires       DateTime
@@ -128,7 +129,7 @@ model sessions {
 }
 
 model users {
-  id            String    @id @default(cuid())
+  id            String    @unique @id @default(cuid())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime?
   email         String    @unique
@@ -136,12 +137,29 @@ model users {
   name          String
   profilePic    String?
   emailVerified Boolean?  @default(false)
-  role          String
   username      String    @unique
-  status        String    @default("active")
   location      String?
   description   String?
   url           String?
   lang          String    @default("en")
   theme         String?   @default("system")
+  roleId String
+  role Role @relation(fields: [roleId], references: [id])
+  statusId String
+  status Status @relation(fields: [statusId], references: [id])
+
+  @@index([roleId])
+  @@index([statusId])
+}
+
+model Role {
+  id String @id @default(cuid())
+  name String @db.VarChar(100)
+  users users[]
+}
+
+model Status {
+  id String @id @default(cuid())
+  name String @db.VarChar(100)
+  users users[]
 }

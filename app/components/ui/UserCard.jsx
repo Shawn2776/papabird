@@ -1,6 +1,11 @@
+"use client";
+
 import React from "react";
 import defaultProfilePic from "/public/defaultProfilePic.jpg";
 import Image from "next/image";
+import Link from "next/link";
+import { MoreHorizontal } from "lucide-react";
+import DeleteButton from "./DeleteButton";
 
 const UserCard = ({ user }) => {
   const { id, name, email, username, status, role, profilePic } = user;
@@ -24,10 +29,25 @@ const UserCard = ({ user }) => {
       </td>
       <td>{email}</td>
       <td>{username}</td>
-      <td>{role}</td>
-      <td>{status}</td>
+      {/* <td>{role.id}</td>
+      <td>{status.id}</td> */}
       <th>
-        <button className="btn btn-md">edit</button>
+        <div className="dropdown dropdown-end">
+          <div tabIndex={0} role="button" className="m-1 btn">
+            <MoreHorizontal />
+          </div>
+          <ul
+            tabIndex={0}
+            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li>
+              <Link href={`/p/edit/${id}`}>edit</Link>
+            </li>
+            <li>
+              <DeleteButton id={id} />
+            </li>
+          </ul>
+        </div>
       </th>
     </tr>
   );

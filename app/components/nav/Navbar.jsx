@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import defaultProfilePic from "/public/defaultProfilePic.jpg";
+import { UserPlus } from "lucide-react";
 
 async function getUser() {
   const { user } = await getServerSession(authOptions);
@@ -35,7 +36,7 @@ const Navbar = async ({ children }) => {
         <div className="flex-1">
           <a className="text-xl btn btn-ghost">daisyUI</a>
         </div>
-        <div className="flex-none gap-2">
+        <div className="flex-none gap-4">
           <div className="form-control">
             <input
               type="text"
@@ -43,6 +44,15 @@ const Navbar = async ({ children }) => {
               className="w-24 input input-bordered md:w-auto"
             />
           </div>
+          <div
+            className="tooltip tooltip-primary tooltip-bottom"
+            data-tip="Create New User"
+          >
+            <Link href="/p/create" className="btn btn-secondary">
+              <UserPlus size={24} />
+            </Link>
+          </div>
+
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="avatar">
               {user ? (
@@ -71,7 +81,7 @@ const Navbar = async ({ children }) => {
                 <a>Settings</a>
               </li>
               <li>
-                <a>Logout</a>
+                <Link href="/auth/signout">Sign Out</Link>
               </li>
             </ul>
           </div>
@@ -85,7 +95,9 @@ const Navbar = async ({ children }) => {
             Users
           </Link>
         </div>
-        <div className="w-full p-4 px-6 rounded-md bg-base-300">{children}</div>
+        <div className="w-full min-h-screen p-4 px-6 rounded-md bg-base-300">
+          {children}
+        </div>
         {/* RIGHT */}
         <div className="w-[2%] bg-base-100"></div>
       </div>

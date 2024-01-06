@@ -4,9 +4,10 @@ import { NextResponse } from "next/server";
 export async function DELETE(request, context) {
   try {
     const { params } = context;
+
     await prisma.users.delete({
       where: {
-        id: params.userid,
+        id: params.id,
       },
     });
 
@@ -23,12 +24,18 @@ export async function PATCH(request, context) {
   try {
     const { params } = context;
     const body = await request.json();
+
     await prisma.users.update({
       where: {
-        id: params.userid,
+        id: params.id,
       },
       data: {
-        ...body,
+        name: body.name,
+        email: body.email,
+        username: body.username,
+        status: body.statusName,
+        role: body.roleName,
+        profilePic: body.profilePic,
       },
     });
 
@@ -49,7 +56,7 @@ export async function GET(request, context) {
     const { params } = context;
     const user = await prisma.users.findUnique({
       where: {
-        id: params.userid,
+        id: params.id,
       },
     });
 
