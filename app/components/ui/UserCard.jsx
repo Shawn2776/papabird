@@ -29,8 +29,8 @@ const UserCard = ({ user }) => {
       </td>
       <td>{email}</td>
       <td>{username}</td>
-      {/* <td>{role.id}</td>
-      <td>{status.id}</td> */}
+      <td>{role.name}</td>
+      <td>{status.name}</td>
       <th>
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="m-1 btn">

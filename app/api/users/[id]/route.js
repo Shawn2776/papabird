@@ -1,9 +1,38 @@
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { authOptions } from "../../auth/[...nextauth]/route";
 
 export async function DELETE(request, context) {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.email) {
+    return NextResponse.redirect("/auth/signin");
+  }
+
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        email: session.user.email,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.redirect("/auth/signin");
+    }
+  } catch (error) {
+    return NextResponse.redirect("/auth/signin");
+  }
+
   try {
     const { params } = context;
+
+    if (session.user.id === params.id) {
+      return NextResponse.json(
+        { message: "You cannot delete your own account." },
+        { status: 403 }
+      );
+    }
 
     await prisma.users.delete({
       where: {

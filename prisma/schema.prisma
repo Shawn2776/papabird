@@ -9,7 +9,7 @@ datasource db {
 }
 
 model BackTalk {
-  id        String    @unique @id @default(cuid())
+  id        String    @id @unique @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime?
   content   String
@@ -29,7 +29,7 @@ model Category {
 }
 
 model Dislike {
-  id        String    @unique @id @default(cuid())
+  id        String    @id @unique @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime?
   ownerId   String
@@ -40,7 +40,7 @@ model Dislike {
 }
 
 model Like {
-  id        String    @unique @id @default(cuid())
+  id        String    @id @unique @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime?
   ownerId   String
@@ -51,7 +51,7 @@ model Like {
 }
 
 model Retalks {
-  id     String @unique @id @default(cuid())
+  id     String @id @unique @default(cuid())
   talkId String
   userId String
 
@@ -60,7 +60,7 @@ model Retalks {
 }
 
 model Talk {
-  id        String    @unique @id @default(cuid())
+  id        String    @id @unique @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime?
   text      String?
@@ -102,7 +102,7 @@ model UserFriends {
 }
 
 model accounts {
-  id                  String  @unique @id @default(cuid())
+  id                  String  @id @unique @default(cuid())
   user_id             String
   type                String
   provider            String
@@ -120,7 +120,7 @@ model accounts {
 }
 
 model sessions {
-  id            String   @unique @id @default(cuid())
+  id            String   @id @unique @default(cuid())
   session_token String   @unique
   user_id       String
   expires       DateTime
@@ -129,7 +129,7 @@ model sessions {
 }
 
 model users {
-  id            String    @unique @id @default(cuid())
+  id            String    @id @unique @default(cuid())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime?
   email         String    @unique
@@ -143,23 +143,23 @@ model users {
   url           String?
   lang          String    @default("en")
   theme         String?   @default("system")
-  roleId String
-  role Role @relation(fields: [roleId], references: [id])
-  statusId String
-  status Status @relation(fields: [statusId], references: [id])
+  roleId        String   @default("clr1qk7c10000feljd5j5afl6")
+  role          Role     @relation(fields: [roleId], references: [id]) 
+  statusId      String  @default("clr1ql01o0003feljsdl20f3c")
+  status        Status   @relation(fields: [statusId], references: [id])
 
   @@index([roleId])
   @@index([statusId])
 }
 
 model Role {
-  id String @id @default(cuid())
+  id            String   @id @unique @default(cuid())
   name String @db.VarChar(100)
   users users[]
 }
 
 model Status {
-  id String @id @default(cuid())
+  id            String   @id @unique @default(cuid())
   name String @db.VarChar(100)
   users users[]
 }
