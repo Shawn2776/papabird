@@ -95,7 +95,7 @@ const Navbar = async ({ children }) => {
             Users
           </Link>
         </div>
-        <div className="w-full min-h-screen p-4 px-6 rounded-md bg-base-300">
+        <div className="w-full min-h-screen p-4 px-6 rounded-md bg-neutral-800">
           {children}
         </div>
         {/* RIGHT */}

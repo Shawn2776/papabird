@@ -1,6 +1,6 @@
 "use client";
 
-import BackButton from "@/app/components/BackButton";
+import BackButton from "@/app/components/ui/BackButton";
 import UserForm from "@/app/components/forms/UserForm";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";

@@ -143,23 +143,23 @@ model users {
   url           String?
   lang          String    @default("en")
   theme         String?   @default("system")
-  roleId        String   @default("clr1qk7c10000feljd5j5afl6")
-  role          Role     @relation(fields: [roleId], references: [id]) 
-  statusId      String  @default("clr1ql01o0003feljsdl20f3c")
-  status        Status   @relation(fields: [statusId], references: [id])
+  roleId        String    @default("clr1qk7c10000feljd5j5afl6")
+  statusId      String    @default("clr1ql01o0003feljsdl20f3c")
+  role          Role      @relation(fields: [roleId], references: [id])
+  status        Status    @relation(fields: [statusId], references: [id])
 
   @@index([roleId])
   @@index([statusId])
 }
 
 model Role {
-  id            String   @id @unique @default(cuid())
-  name String @db.VarChar(100)
+  id    String  @id @unique @default(cuid())
+  name  String  @db.VarChar(100)
   users users[]
 }
 
 model Status {
-  id            String   @id @unique @default(cuid())
-  name String @db.VarChar(100)
+  id    String  @id @unique @default(cuid())
+  name  String  @db.VarChar(100)
   users users[]
 }

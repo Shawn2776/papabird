@@ -11,7 +11,7 @@ const UserCard = ({ user }) => {
   const { id, name, email, username, status, role, profilePic } = user;
   return (
     <tr>
-      <td>
+      <td className="items-center ">
         <div className="flex items-center gap-3">
           <div className="avatar">
             <Image
@@ -24,13 +24,37 @@ const UserCard = ({ user }) => {
           </div>
           <div>
             <div className="font-bold">{name}</div>
+            <div>{email}</div>
           </div>
         </div>
       </td>
-      <td>{email}</td>
-      <td>{username}</td>
-      <td>{role.name}</td>
-      <td>{status.name}</td>
+      <td>
+        <div
+          className={`flex items-center ${
+            role.name === "admin"
+              ? "badge badge-accent font-bold text-green-500 badge-outline"
+              : "badge badge-info badge-outline"
+          }`}
+        >
+          {role.name}
+        </div>
+      </td>
+      <td>
+        <div className="flex items-center h-full gap-2 align-middle">
+          <div
+            className={`${
+              status.name === "active"
+                ? "badge badge-success badge-xs"
+                : "badge badge-warning badge-xs"
+            }`}
+          ></div>
+          <div
+            className={status.name === "active" ? "text-white" : "text-warning"}
+          >
+            {status.name}
+          </div>
+        </div>
+      </td>
       <th>
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="m-1 btn">
